@@ -15,6 +15,7 @@ public class IndexFrame extends Frame {
 
     public static void main(String[] args){
         IndexFrame awtGraphicsDemo = new IndexFrame();
+        awtGraphicsDemo.add(new IndexPanel(awtGraphicsDemo));
         awtGraphicsDemo.setVisible(true);
     }
 
@@ -27,31 +28,14 @@ public class IndexFrame extends Frame {
         });
         ImageIcon img = new ImageIcon(getClass().getResource("icon.png"));
         setIconImage(img.getImage());
-
-        controlPanel = new JPanel();
-        controlPanel.setLayout(new FlowLayout());
-
-        JButton pastRecordsButton = new JButton("View Past Records");
-        JButton todayRecordButton = new JButton("Edit Today's Record");
-
-        pastRecordsButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(doAddPastIndexPanel);
-            }
-        });
-
-        controlPanel.add(pastRecordsButton);
-        controlPanel.add(todayRecordButton);
-        add(controlPanel);
     }
 
-    Runnable doAddPastIndexPanel = new Runnable() {
-        public void run() {
-            remove(controlPanel);
-            add(new PastIndexPanel());
-            revalidate();
-            repaint();
-        }
-    };
+    public void switchComponent(JComponent componentToRemove, JComponent componentToAdd) {
+        remove(componentToRemove);
+        add(componentToAdd);
+        revalidate();
+        repaint();
+    }
+
 
 }

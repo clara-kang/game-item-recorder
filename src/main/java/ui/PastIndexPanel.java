@@ -4,6 +4,8 @@ import logic.DataUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -14,9 +16,13 @@ import java.util.List;
 public class PastIndexPanel extends JPanel{
 
     private List<JButton> pastMonthsButtons;
+    private IndexFrame indexFrame;
+    private IndexPanel indexPanel;
 
-    public PastIndexPanel(){
+    public PastIndexPanel(IndexFrame indexFrame, IndexPanel indexPanel){
         super();
+        this.indexFrame = indexFrame;
+        this.indexPanel = indexPanel;
         setLayout(new FlowLayout());
         addPastMonthsButtons();
     }
@@ -37,10 +43,23 @@ public class PastIndexPanel extends JPanel{
             e.printStackTrace();
             //todo make a popup window to display data not found
         }
+        JButton returnButton = new JButton("Return");
+        returnButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(returnToIndexPanel);
+            }
+        });
+        this.add(returnButton);
     }
 
     private String toMonth(String number) {
         Integer month = Integer.parseInt(number);
         return new DateFormatSymbols().getMonths()[month-1];
     }
+
+    Runnable returnToIndexPanel = new Runnable() {
+        public void run() {
+            indexFrame.switchComponent(PastIndexPanel.this, indexPanel);
+        }
+    };
 }
