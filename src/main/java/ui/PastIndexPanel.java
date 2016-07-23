@@ -1,5 +1,8 @@
 package ui;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import logic.DataUtils;
 
 import javax.swing.*;
@@ -12,17 +15,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
+@Singleton
 public class PastIndexPanel extends JPanel{
 
     private List<JButton> pastMonthsButtons;
     private IndexFrame indexFrame;
-    private IndexPanel indexPanel;
 
-    public PastIndexPanel(IndexFrame indexFrame, IndexPanel indexPanel){
+    @Inject
+    public PastIndexPanel(IndexFrame indexFrame){
         super();
         this.indexFrame = indexFrame;
-        this.indexPanel = indexPanel;
         setLayout(new FlowLayout());
         addPastMonthsButtons();
     }
@@ -59,7 +61,7 @@ public class PastIndexPanel extends JPanel{
 
     Runnable returnToIndexPanel = new Runnable() {
         public void run() {
-            indexFrame.switchComponent(PastIndexPanel.this, indexPanel);
+            indexFrame.switchComponent(PastIndexPanel.class, IndexPanel.class);
         }
     };
 }

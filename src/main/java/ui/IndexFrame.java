@@ -1,21 +1,25 @@
 package ui;
 
+import com.google.inject.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class IndexFrame extends Frame {
 
-    private JPanel controlPanel;
+    public static IndexFrame awtGraphicsDemo;
+    public static Injector injector;
 
     public IndexFrame(){
-        super("Java AWT Examples");
+        super("Blade&Soul Game Item Recorder");
         prepareGUI();
     }
 
     public static void main(String[] args){
-        IndexFrame awtGraphicsDemo = new IndexFrame();
-        awtGraphicsDemo.add(new IndexPanel(awtGraphicsDemo));
+        awtGraphicsDemo = new IndexFrame();
+        injector = Guice.createInjector(new IndexFrameModule());
+        awtGraphicsDemo.add(injector.getInstance(IndexPanel.class));
         awtGraphicsDemo.setVisible(true);
     }
 
@@ -30,12 +34,22 @@ public class IndexFrame extends Frame {
         setIconImage(img.getImage());
     }
 
-    public void switchComponent(JComponent componentToRemove, JComponent componentToAdd) {
-        remove(componentToRemove);
-        add(componentToAdd);
+    public void switchComponent(Class<? extends JComponent> componentToRemove, Class<? extends JComponent> componentToAdd) {
+        remove(injector.getInstance(componentToRemove));
+        add(injector.getInstance(componentToAdd));
         revalidate();
         repaint();
     }
 
+    public static class IndexFrameModule extends AbstractModule {
+
+        @Provides
+        IndexFrame provideIndexFrame() {
+            return awtGraphicsDemo;
+        }
+
+        protected void configure(){
+        }
+    }
 
 }

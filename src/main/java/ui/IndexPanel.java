@@ -1,14 +1,19 @@
 package ui;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+@Singleton
 public class IndexPanel extends JPanel {
 
     private IndexFrame indexFrame;
 
+    @Inject
     public IndexPanel(IndexFrame indexFrame){
         this.indexFrame = indexFrame;
         setLayout(new FlowLayout());
@@ -25,7 +30,7 @@ public class IndexPanel extends JPanel {
 
     Runnable doAddPastIndexPanel = new Runnable() {
         public void run() {
-            indexFrame.switchComponent(IndexPanel.this, new PastIndexPanel(indexFrame, IndexPanel.this));
+            indexFrame.switchComponent(IndexPanel.class, PastIndexPanel.class);
         }
     };
 }

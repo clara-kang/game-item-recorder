@@ -11,7 +11,7 @@ import java.util.List;
 public class DataUtils {
 
     private static String pwd = Utils.readCurrentDirectory();
-    private static File folder = new File(pwd + "/data");
+    private static File folder = new File(pwd + "\\data");
 
     public static List<String> readMonthTableNames() throws FileNotFoundException{
         List<String> result = new ArrayList<String>();
