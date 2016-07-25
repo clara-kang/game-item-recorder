@@ -41,6 +41,27 @@ public class IndexFrame extends Frame {
         repaint();
     }
 
+    public void switchComponent(JComponent componentToRemove, Class<? extends JComponent> componentToAdd) {
+        remove(componentToRemove);
+        add(injector.getInstance(componentToAdd));
+        revalidate();
+        repaint();
+    }
+
+    public void switchComponent(Class<? extends JComponent> componentToRemove, JComponent componentToAdd) {
+        remove(injector.getInstance(componentToRemove));
+        add(componentToAdd);
+        revalidate();
+        repaint();
+    }
+
+    public void switchComponent(JComponent componentToRemove, JComponent componentToAdd) {
+        remove(componentToRemove);
+        add(componentToAdd);
+        revalidate();
+        repaint();
+    }
+
     public static class IndexFrameModule extends AbstractModule {
 
         @Provides

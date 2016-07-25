@@ -1,12 +1,12 @@
 package logic;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 public class DataUtils {
 
@@ -33,6 +33,18 @@ public class DataUtils {
             }
         }
 
+        return result;
+    }
+
+    public static Map<Long, String> readDates(String month) throws IOException{
+        String path = pwd + "\\data\\" + month + ".csv";
+        Map<Long, String> result = new TreeMap<Long, String>();
+
+        Reader in = new FileReader(path);
+        Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(in);
+        for (CSVRecord record : records) {
+            result.put(record.getRecordNumber(), record.get("DATE"));
+        }
         return result;
     }
 

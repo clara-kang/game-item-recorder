@@ -1,7 +1,6 @@
 package ui;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import logic.DataUtils;
 
@@ -20,11 +19,13 @@ public class PastIndexPanel extends JPanel{
 
     private List<JButton> pastMonthsButtons;
     private IndexFrame indexFrame;
+    private MonthButton.MonthButtonFactory monthButtonFactory;
 
     @Inject
-    public PastIndexPanel(IndexFrame indexFrame){
+    public PastIndexPanel(IndexFrame indexFrame, MonthButton.MonthButtonFactory monthButtonFactory){
         super();
         this.indexFrame = indexFrame;
+        this.monthButtonFactory = monthButtonFactory;
         setLayout(new FlowLayout());
         addPastMonthsButtons();
     }
@@ -36,7 +37,7 @@ public class PastIndexPanel extends JPanel{
             Iterator<String> itr = monthTableNames.iterator();
             while(itr.hasNext()) {
                 String id = itr.next();
-                JButton month = new JButton(toMonth(id));
+                MonthButton month = monthButtonFactory.create(toMonth(id), id);
                 this.add(month);
                 pastMonthsButtons.add(month);
             }
