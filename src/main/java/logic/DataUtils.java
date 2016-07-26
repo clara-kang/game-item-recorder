@@ -1,6 +1,7 @@
 package logic;
 
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -9,7 +10,6 @@ import java.io.*;
 import java.util.*;
 
 public class DataUtils {
-
     private static String pwd = Utils.readCurrentDirectory();
     private static File folder = new File(pwd + "\\data");
 
@@ -37,15 +37,28 @@ public class DataUtils {
     }
 
     public static Map<Long, String> readDates(String month) throws IOException{
-        String path = pwd + "\\data\\" + month + ".csv";
         Map<Long, String> result = new TreeMap<Long, String>();
+        List<CSVRecord> records = readTable(month);
 
-        Reader in = new FileReader(path);
-        Iterable<CSVRecord> records = CSVFormat.EXCEL.withHeader().parse(in);
         for (CSVRecord record : records) {
             result.put(record.getRecordNumber(), record.get("DATE"));
         }
         return result;
+    }
+
+    public static CSVRecord readItems(String month, Long rowNumber) throws IOException{
+        List<CSVRecord> records = readTable(month);
+        int row = rowNumber.intValue();
+        return records.get(row - 1);
+    }
+
+    private static List<CSVRecord> readTable(String month) throws IOException{
+        String path = pwd + "\\data\\" + month + ".csv";
+        Reader in = new FileReader(path);
+        CSVParser parser = CSVFormat.EXCEL.withHeader().parse(in);
+        List<CSVRecord> list = parser.getRecords();
+        parser.close();
+        return list;
     }
 
 }
