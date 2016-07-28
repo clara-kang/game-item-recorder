@@ -1,9 +1,13 @@
 package logic;
 
-import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.ArrayUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
+import java.util.Set;
 
 public class Utils {
 
@@ -11,20 +15,43 @@ public class Utils {
         return System.getenv("PWD");
     }
 
-    public static String getItemHtmlPage(CSVRecord row) {
-        Map<String, String> records = row.toMap();
-        String result = "";
-        result += "<table><tr><th>Item</th><th>Quantity</th></tr>";
-        Iterator<String> itr1 = records.keySet().iterator();
-        while(itr1.hasNext()){
-            String key = itr1.next();
-            if(key.equals("DATE")){
-                continue;
-            }
-            result += "<tr><td>" + key + "</td><td>" + records.get(key) + "</td></tr>";
-        }
-        result += "</table>";
+    public static List<String> readMonths() throws FileNotFoundException {
+        String pwd = readCurrentDirectory();
+        File folder = new File(pwd + "\\data");
+        List<String> result = new ArrayList<String>();
 
+        if(!folder.exists()) {
+            throw new FileNotFoundException("no data directory found");
+        }
+
+        File[] listOfFiles = folder.listFiles();
+
+        if(ArrayUtils.isEmpty(listOfFiles)) {
+            return null;
+        }
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile() && listOfFiles[i].getName().contains(".mv.db") ) {
+                System.out.println("File " + listOfFiles[i].getName());
+                result.add(listOfFiles[i].getName().replace(".mv.db", ""));
+            }
+        }
+
+        return result;
+    }
+
+    public static Object[][] itemSetToObjectArray(Set setOfObject) {
+        Object[][] result = new Object[setOfObject.size()][3];
+        if(setOfObject != null) {
+            Iterator<Item> itemIterator = setOfObject.iterator();
+            int counter = 0;
+            while (itemIterator.hasNext()) {
+                Item item = itemIterator.next();
+                Object[] arr = {item.getName(), item.getPrice(), item.getQuantity()};
+                result[counter] = arr;
+                counter ++;
+            }
+        }
         return result;
     }
 }

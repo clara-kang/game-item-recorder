@@ -2,23 +2,22 @@ package ui;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import logic.DataUtils;
+import logic.DataUtil;
+import logic.Item;
 import logic.Utils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.util.Set;
 
 public class DayPanel extends JPanel{
     private IndexFrame indexFrame;
-    private String month;
     private MonthPanel monthPanel;
 
-    public DayPanel(IndexFrame indexFrame, String date, Long rowNumber, String month, MonthPanel monthPanel) {
+    public DayPanel(IndexFrame indexFrame, String date, String month, MonthPanel monthPanel, DataUtil dataUtil) {
         this.indexFrame = indexFrame;
-        this.month = month;
         this.monthPanel = monthPanel;
 
         this.setLayout(new GridLayout(1,1));
@@ -28,20 +27,13 @@ public class DayPanel extends JPanel{
                 SwingUtilities.invokeLater(returnToMonthPanel);
             }
         });
-        JEditorPane editorPane = new JEditorPane(){
-            public boolean getScrollableTracksViewportWidth() {
-                return true;
-            }
-        };
-        editorPane.setEditable(false);
-        editorPane.setContentType("text/html");
-        try {
-            editorPane.setText(Utils.getItemHtmlPage(DataUtils.readItems(month, rowNumber)));
-        }catch (IOException e){
 
-        }
-        JScrollPane scrollpane = new JScrollPane(editorPane);
-        add(scrollpane);
+        String[] columnNames = {"Item Name", "Price", "Quantity"};
+        Set<Item> queryResult = dataUtil.readItems(month, date);
+        Object[][] rowData = Utils.itemSetToObjectArray(queryResult);
+        JTable table = new JTable(rowData, columnNames);
+        JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane);
         add(returnButton);
     }
 
@@ -54,14 +46,16 @@ public class DayPanel extends JPanel{
     @Singleton
     public static class DayPanelFactory {
         private IndexFrame indexFrame;
+        private DataUtil dataUtil;
 
         @Inject
-        public DayPanelFactory(IndexFrame indexFrame) {
+        public DayPanelFactory(IndexFrame indexFrame, DataUtil dataUtil) {
             this.indexFrame = indexFrame;
+            this.dataUtil = dataUtil;
         }
 
-        public DayPanel create(String date, Long rowNumber, String month, MonthPanel monthPanel) {
-            return new DayPanel(indexFrame, date, rowNumber, month, monthPanel);
+        public DayPanel create(String date, String month, MonthPanel monthPanel) {
+            return new DayPanel(indexFrame, date, month, monthPanel, dataUtil);
         }
     }
 }

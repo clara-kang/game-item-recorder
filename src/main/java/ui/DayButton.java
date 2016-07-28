@@ -9,17 +9,15 @@ import java.awt.event.ActionListener;
 
 public class DayButton extends JButton{
     private IndexFrame indexFrame;
-    private Long rowNumber;
     private String date;
     private String month;
     private MonthPanel monthPanel;
     private DayPanel.DayPanelFactory dayPanelFactory;
 
 
-    public DayButton(IndexFrame indexFrame, Long rowNumber, String date, String month, DayPanel.DayPanelFactory dayPanelFactor, MonthPanel monthPanel) {
+    public DayButton(IndexFrame indexFrame, String date, String month, DayPanel.DayPanelFactory dayPanelFactor, MonthPanel monthPanel) {
         super(date);
         this.indexFrame = indexFrame;
-        this.rowNumber = rowNumber;
         this.date = date;
         this.month = month;
         this.dayPanelFactory = dayPanelFactor;
@@ -34,7 +32,7 @@ public class DayButton extends JButton{
 
     Runnable displayItems = new Runnable() {
         public void run() {
-            indexFrame.switchComponent((JPanel)DayButton.this.getParent(), dayPanelFactory.create(date, rowNumber, month, monthPanel));
+            indexFrame.switchComponent((JPanel)DayButton.this.getParent(), dayPanelFactory.create(date, month, monthPanel));
         }
     };
 
@@ -49,8 +47,8 @@ public class DayButton extends JButton{
             this.dayPanelFactory = dayPanelFactory;
         }
 
-        public DayButton create(Long rowNumber, String date, String month, MonthPanel monthPanel) {
-            return new DayButton(indexFrame, rowNumber, date, month, dayPanelFactory, monthPanel);
+        public DayButton create(String date, String month, MonthPanel monthPanel) {
+            return new DayButton(indexFrame, date, month, dayPanelFactory, monthPanel);
         }
     }
 }

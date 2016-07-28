@@ -2,7 +2,7 @@ package ui;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import logic.DataUtils;
+import logic.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +33,7 @@ public class PastIndexPanel extends JPanel{
     private void addPastMonthsButtons() {
         pastMonthsButtons = new ArrayList<JButton>();
         try{
-            List<String> monthTableNames = DataUtils.readMonthTableNames();
+            List<String> monthTableNames = Utils.readMonths();
             Iterator<String> itr = monthTableNames.iterator();
             while(itr.hasNext()) {
                 String id = itr.next();

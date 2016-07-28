@@ -1,6 +1,8 @@
 package ui;
 
 import com.google.inject.*;
+import logic.DataUtil;
+import logic.H2DataUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,6 +72,7 @@ public class IndexFrame extends Frame {
         }
 
         protected void configure(){
+            bind(DataUtil.class).to(H2DataUtil.class).in(Singleton.class);
         }
     }
 
