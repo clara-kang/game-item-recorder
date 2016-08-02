@@ -5,5 +5,8 @@ import java.util.Set;
 
 public interface DataUtil {
     List<String> readDates(String month);
-    Set<Item> readItems(String month, String date);
+    Set<Item> readDay(String month, String date);
+    void createDay(String month, String date) throws Exception;
+    //todo use item instead of colum etc..
+    void updateDay(String month, String date, String column, int newValue, String item);
 }

@@ -46,7 +46,7 @@ public class H2DataUtil implements DataUtil{
         return result;
     }
 
-    public Set<Item> readItems(String month, String date){
+    public Set<Item> readDay(String month, String date){
         try {
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException e) {
@@ -69,6 +69,97 @@ public class H2DataUtil implements DataUtil{
                 item.setPrice(rs.getInt("PRICE"));
                 item.setQuantity(rs.getInt("QUANTITY"));
                 result.add(item);
+            }
+
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                cleanUp(conn, stmt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    public void createDay(String month, String date) throws Exception{
+        try {
+            Class.forName(JDBC_DRIVER);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        List<String> itemTypes = getItemTypes();
+        if (itemTypes != null) {
+            System.out.println("Connecting to database...");
+            Connection conn = null;
+            Statement stmt = null;
+            try {
+                conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
+                stmt = conn.createStatement();
+                stmt.execute("CREATE TABLE IF NOT EXISTS DAY" + date + "(ITEM VARCHAR(255) PRIMARY KEY, QUANTITY INT, PRICE INT);");
+
+                Iterator<String> iterator = itemTypes.iterator();
+                while(iterator.hasNext()) {
+                    stmt.execute("INSERT INTO DAY" + date + " VALUES ('" + iterator.next() + "', NULL, NULL);");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new Exception("Table not created: " + e.getMessage());
+            } finally {
+                try {
+                    cleanUp(conn, stmt);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void updateDay(String month, String date, String column, int newValue, String item) {
+        try {
+            Class.forName(JDBC_DRIVER);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Connecting to database...");
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
+            stmt = conn.createStatement();
+            stmt.execute("UPDATE DAY" + date + " SET " + column + " = " + newValue + " WHERE ITEM='" + item + "'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                cleanUp(conn, stmt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private List<String> getItemTypes() {
+        try {
+            Class.forName(JDBC_DRIVER);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        System.out.println("Connecting to database...");
+        Connection conn = null;
+        Statement stmt = null;
+        List<String> result = new LinkedList<String>();
+        String sql = "SELECT TYPE FROM TYPES";
+        try {
+            conn = DriverManager.getConnection(DB_URL_PREFIX + "items", USER, PASS);
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                result.add(rs.getString("TYPE"));
             }
 
             rs.close();

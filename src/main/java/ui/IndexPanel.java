@@ -24,6 +24,11 @@ public class IndexPanel extends JPanel {
                 SwingUtilities.invokeLater(doAddPastIndexPanel);
             }
         });
+        todayRecordButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(doAddTodayPanel);
+            }
+        });
         add(pastRecordsButton);
         add(todayRecordButton);
     }
@@ -31,6 +36,12 @@ public class IndexPanel extends JPanel {
     Runnable doAddPastIndexPanel = new Runnable() {
         public void run() {
             indexFrame.switchComponent(IndexPanel.class, PastIndexPanel.class);
+        }
+    };
+
+    Runnable doAddTodayPanel = new Runnable() {
+        public void run() {
+            indexFrame.switchComponent(IndexPanel.class, TodayPanel.class);
         }
     };
 }

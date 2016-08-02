@@ -29,9 +29,10 @@ public class DayPanel extends JPanel{
         });
 
         String[] columnNames = {"Item Name", "Price", "Quantity"};
-        Set<Item> queryResult = dataUtil.readItems(month, date);
+        Set<Item> queryResult = dataUtil.readDay(month, date);
         Object[][] rowData = Utils.itemSetToObjectArray(queryResult);
         JTable table = new JTable(rowData, columnNames);
+        table.setEnabled(false);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane);
         add(returnButton);

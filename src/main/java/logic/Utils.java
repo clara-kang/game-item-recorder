@@ -4,10 +4,9 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Utils {
 
@@ -33,7 +32,11 @@ public class Utils {
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isFile() && listOfFiles[i].getName().contains(".mv.db") ) {
                 System.out.println("File " + listOfFiles[i].getName());
-                result.add(listOfFiles[i].getName().replace(".mv.db", ""));
+                String month = listOfFiles[i].getName().replace(".mv.db", "");
+                //todo change this hard coded line
+                if ( !month.equals("items")) {
+                    result.add(month);
+                }
             }
         }
 
@@ -53,5 +56,19 @@ public class Utils {
             }
         }
         return result;
+    }
+
+    public static String getTodayDate() {
+        DateFormat dateFormat = new SimpleDateFormat("dd");
+        Date date = new Date();
+        System.out.println(dateFormat.format(date));
+        return dateFormat.format(date);
+    }
+
+    public static String getTodayMonth() {
+        DateFormat dateFormat = new SimpleDateFormat("MM");
+        Date date = new Date();
+        System.out.println(dateFormat.format(date));
+        return dateFormat.format(date);
     }
 }

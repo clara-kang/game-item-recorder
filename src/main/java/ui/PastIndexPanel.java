@@ -41,7 +41,6 @@ public class PastIndexPanel extends JPanel{
                 this.add(month);
                 pastMonthsButtons.add(month);
             }
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             //todo make a popup window to display data not found
@@ -55,9 +54,15 @@ public class PastIndexPanel extends JPanel{
         this.add(returnButton);
     }
 
-    private String toMonth(String number) {
-        Integer month = Integer.parseInt(number);
-        return new DateFormatSymbols().getMonths()[month-1];
+    //todo move to utils
+    private String toMonth(String month) {
+        try {
+            int num = Integer.parseInt(month);
+            return new DateFormatSymbols().getMonths()[num-1];
+        } catch (NumberFormatException e){
+            //todo
+            return null;
+        }
     }
 
     Runnable returnToIndexPanel = new Runnable() {
