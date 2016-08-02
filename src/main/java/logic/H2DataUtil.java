@@ -141,6 +141,30 @@ public class H2DataUtil implements DataUtil{
         }
     }
 
+    public void insertItem(String month, String date, String itemName) {
+        try {
+            Class.forName(JDBC_DRIVER);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Connecting to database...");
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
+            stmt = conn.createStatement();
+            stmt.execute("INSERT INTO DAY" + date + "VALUES (" + itemName + ",0,0)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                cleanUp(conn, stmt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private List<String> getItemTypes() {
         try {
             Class.forName(JDBC_DRIVER);

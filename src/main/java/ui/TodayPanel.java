@@ -59,7 +59,17 @@ public class TodayPanel extends JPanel{
         });
 
         JScrollPane scrollPane = new JScrollPane(table);
+
+        JButton okButton = new JButton("OK");
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(
+                        TodayPanel.this, "Welcome to TutorialsPoint.com");
+            }
+        });
+
         add(scrollPane);
+        add(okButton);
         add(returnButton);
     }
 
