@@ -49,16 +49,23 @@ public class TodayPanel extends JPanel{
         String[] columnNames = {"ITEM", "PRICE", "QUANTITY"};
         Set<Item> queryResult = dataUtil.readDay(month, "DAY" + date);
         Object[][] rowData = Utils.itemSetToObjectArray(queryResult);
+        //todo add increase decrease button
+        //todo disable item column
         table = new JTable();
         DefaultTableModel model = new DefaultTableModel(rowData, columnNames);
 
         model.addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 if (e.getType() == TableModelEvent.UPDATE) {
-                    String itemName = (String)table.getModel().getValueAt(e.getLastRow(), 0);
-                    int newValue = Integer.parseInt((String)table.getModel().getValueAt(e.getLastRow(), e.getColumn()));
-                    String column = table.getColumnName(e.getColumn());
-                    dataUtil.updateDay(month, date, column, newValue, itemName);
+                    //todo for unsuccessful changes, reset values
+                    try {
+                        String itemName = (String) table.getModel().getValueAt(e.getLastRow(), 0);
+                        int newValue = Integer.parseInt((String) table.getModel().getValueAt(e.getLastRow(), e.getColumn()));
+                        String column = table.getColumnName(e.getColumn());
+                        dataUtil.updateDay(month, date, column, newValue, itemName);
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, e1.getMessage());
+                    }
                 }
             }
         });
@@ -71,12 +78,15 @@ public class TodayPanel extends JPanel{
         insertButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String itemName =  JOptionPane.showInputDialog(null,"Enter a message");
-                boolean itemInserted = false;
                 if(StringUtils.isNotBlank(itemName)) {
-                    dataUtil.insertItem(month, date, itemName);
-                    Object[] row = {itemName, 0, 0};
-                    ((DefaultTableModel) table.getModel()).addRow(row);
-                    JOptionPane.showMessageDialog(null, "registered");
+                    try {
+                        dataUtil.insertItem(month, date, itemName);
+                        Object[] row = {itemName, 0, 0};
+                        ((DefaultTableModel) table.getModel()).addRow(row);
+                        JOptionPane.showMessageDialog(null, "registered");
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, e1.getMessage());
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "item could not be blank");
                 }
@@ -91,10 +101,14 @@ public class TodayPanel extends JPanel{
                 for(int i = 0; i < table.getModel().getRowCount(); i ++) {
                     System.out.println(table.getValueAt(i, 0));
                     if(table.getValueAt(i, 0).equals(itemName)) {
-                        ((DefaultTableModel) table.getModel()).removeRow(i);
-                        JOptionPane.showMessageDialog(null, "deleted");
-                        dataUtil.deleteItem(month, date, itemName);
-                        itemDeleted = true;
+                        try {
+                            ((DefaultTableModel) table.getModel()).removeRow(i);
+                            JOptionPane.showMessageDialog(null, "deleted");
+                            dataUtil.deleteItem(month, date, itemName);
+                            itemDeleted = true;
+                        } catch (Exception e1) {
+                            JOptionPane.showMessageDialog(null, e1.getMessage());
+                        }
                         break;
                     }
                 }
@@ -104,6 +118,7 @@ public class TodayPanel extends JPanel{
             }
         });
 
+        //todo fix layout, make sure scroll bar is functioning
         add(scrollPane, BorderLayout.CENTER);
         add(insertButton, BorderLayout.PAGE_END);
         add(deleteButton, BorderLayout.PAGE_END);

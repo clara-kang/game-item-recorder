@@ -118,7 +118,7 @@ public class H2DataUtil implements DataUtil{
         }
     }
 
-    public void updateDay(String month, String date, String column, int newValue, String item) {
+    public void updateDay(String month, String date, String column, int newValue, String item) throws Exception{
         try {
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException e) {
@@ -133,6 +133,7 @@ public class H2DataUtil implements DataUtil{
             stmt.execute("UPDATE DAY" + date + " SET " + column + " = " + newValue + " WHERE ITEM='" + item + "'");
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new Exception("table update unsuccessful");
         } finally {
             try {
                 cleanUp(conn, stmt);
@@ -143,7 +144,7 @@ public class H2DataUtil implements DataUtil{
     }
 
     //todo make only one transaction
-    public void insertItem(String month, String date, String itemName) {
+    public void insertItem(String month, String date, String itemName) throws Exception{
         try {
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException e) {
@@ -159,6 +160,7 @@ public class H2DataUtil implements DataUtil{
             stmt.execute("INSERT INTO DAY" + date + " VALUES ('" + itemName + "',0,0)");
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new Exception("insert into database not successful");
         } finally {
             try {
                 cleanUp(conn, stmt);
@@ -173,6 +175,7 @@ public class H2DataUtil implements DataUtil{
             stmt.execute("INSERT INTO TYPES VALUES ('" + itemName + "')");
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new Exception("insert into database not successful");
         } finally {
             try {
                 cleanUp(conn, stmt);
@@ -183,7 +186,7 @@ public class H2DataUtil implements DataUtil{
     }
 
     //todo make only one transaction
-    public void deleteItem(String month, String date, String itemName) {
+    public void deleteItem(String month, String date, String itemName) throws Exception{
         try {
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException e) {
@@ -199,6 +202,7 @@ public class H2DataUtil implements DataUtil{
             stmt.execute("DELETE FROM DAY" + date + " WHERE ITEM = '" + itemName + "'");
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new Exception("delete from database not successful");
         } finally {
             try {
                 cleanUp(conn, stmt);
@@ -213,6 +217,7 @@ public class H2DataUtil implements DataUtil{
             stmt.execute("DELETE FROM TYPES WHERE TYPE = '" + itemName + "'");
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new Exception("delete from database not successful");
         } finally {
             try {
                 cleanUp(conn, stmt);
