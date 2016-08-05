@@ -3,6 +3,7 @@ package logic;
 import java.sql.*;
 import java.util.*;
 
+//TODO create type table if not exists
 public class H2DataUtil implements DataUtil{
 
     private static String pwd = Utils.readCurrentDirectory();
@@ -98,11 +99,11 @@ public class H2DataUtil implements DataUtil{
             try {
                 conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
                 stmt = conn.createStatement();
-                stmt.execute("CREATE TABLE IF NOT EXISTS DAY" + date + "(ITEM VARCHAR(255) PRIMARY KEY, QUANTITY INT, PRICE INT);");
+                stmt.execute("CREATE TABLE IF NOT EXISTS DAY" + date + "(ITEM VARCHAR(255) NOT NULL PRIMARY KEY, QUANTITY INT, PRICE INT);");
 
                 Iterator<String> iterator = itemTypes.iterator();
                 while(iterator.hasNext()) {
-                    stmt.execute("INSERT INTO DAY" + date + " VALUES ('" + iterator.next() + "', NULL, NULL);");
+                    stmt.execute("INSERT INTO DAY" + date + " VALUES ('" + iterator.next() + "', 0, 0);");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -141,6 +142,7 @@ public class H2DataUtil implements DataUtil{
         }
     }
 
+    //todo make only one transaction
     public void insertItem(String month, String date, String itemName) {
         try {
             Class.forName(JDBC_DRIVER);
@@ -150,10 +152,65 @@ public class H2DataUtil implements DataUtil{
         System.out.println("Connecting to database...");
         Connection conn = null;
         Statement stmt = null;
+        //modify today's table
         try {
             conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
             stmt = conn.createStatement();
-            stmt.execute("INSERT INTO DAY" + date + "VALUES (" + itemName + ",0,0)");
+            stmt.execute("INSERT INTO DAY" + date + " VALUES ('" + itemName + "',0,0)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                cleanUp(conn, stmt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        //modify types table
+        try {
+            conn = DriverManager.getConnection(DB_URL_PREFIX + "items", USER, PASS);
+            stmt = conn.createStatement();
+            stmt.execute("INSERT INTO TYPES VALUES ('" + itemName + "')");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                cleanUp(conn, stmt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //todo make only one transaction
+    public void deleteItem(String month, String date, String itemName) {
+        try {
+            Class.forName(JDBC_DRIVER);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Connecting to database...");
+        Connection conn = null;
+        Statement stmt = null;
+        //modify today's table
+        try {
+            conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
+            stmt = conn.createStatement();
+            stmt.execute("DELETE FROM DAY" + date + " WHERE ITEM = '" + itemName + "'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                cleanUp(conn, stmt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        //modify types table
+        try {
+            conn = DriverManager.getConnection(DB_URL_PREFIX + "items", USER, PASS);
+            stmt = conn.createStatement();
+            stmt.execute("DELETE FROM TYPES WHERE TYPE = '" + itemName + "'");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

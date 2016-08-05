@@ -26,7 +26,7 @@ public class IndexFrame extends Frame {
     }
 
     private void prepareGUI(){
-        setSize(400,400);
+        setSize(400,600);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
                 System.exit(0);

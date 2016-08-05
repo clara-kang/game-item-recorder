@@ -10,4 +10,5 @@ public interface DataUtil {
     //todo use item instead of colum etc..
     void updateDay(String month, String date, String column, int newValue, String item);
     void insertItem(String month, String date, String itemName);
+    void deleteItem(String month, String date, String itemName);
 }
