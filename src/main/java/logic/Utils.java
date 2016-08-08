@@ -16,7 +16,7 @@ public class Utils {
 
     public static List<String> readMonths() throws FileNotFoundException {
         String pwd = readCurrentDirectory();
-        File folder = new File(pwd + "/data");
+        File folder = new File(pwd + "\\data");
         List<String> result = new ArrayList<String>();
 
         if(!folder.exists()) {
@@ -50,7 +50,7 @@ public class Utils {
             int counter = 0;
             while (itemIterator.hasNext()) {
                 Item item = itemIterator.next();
-                Object[] arr = {item.getName(), item.getPrice(), item.getQuantity()};
+                Object[] arr = {item.getName(), Double.toString(item.getPrice()), Integer.toString(item.getQuantity()), item.getItemTotal()};
                 result[counter] = arr;
                 counter ++;
             }

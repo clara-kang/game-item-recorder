@@ -8,7 +8,8 @@ public interface DataUtil {
     Set<Item> readDay(String month, String date);
     void createDay(String month, String date) throws Exception;
     //todo use item instead of colum etc..
-    void updateDay(String month, String date, String column, int newValue, String item) throws Exception;
+    void updateDay(String month, String date, String column, String newValue, String item) throws Exception;
     void insertItem(String month, String date, String itemName) throws Exception;
     void deleteItem(String month, String date, String itemName) throws Exception;
+    double getTotalValue(String month, String date);
 }

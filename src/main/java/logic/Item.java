@@ -2,8 +2,9 @@ package logic;
 
 public class Item {
     private String name;
-    private int price;
+    private double price;
     private int quantity;
+    private double itemTotal;
 
     public String getName() {
         return name;
@@ -13,16 +14,24 @@ public class Item {
         this.name = name;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public double getItemTotal() {
+        return itemTotal;
+    }
+
+    public void setItemTotal(double itemTotal) {
+        this.itemTotal = itemTotal;
     }
 
     public void setQuantity(int quantity) {

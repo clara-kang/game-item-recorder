@@ -58,7 +58,7 @@ public class H2DataUtil implements DataUtil{
         Connection conn = null;
         Statement stmt = null;
         Set<Item> result = new HashSet<Item>();
-        String sql = "SELECT * FROM " + date;
+        String sql = "SELECT ITEM, QUANTITY, PRICE, QUANTITY * PRICE AS ITEMTOTAL FROM " + date;
         try {
             conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
             stmt = conn.createStatement();
@@ -67,8 +67,9 @@ public class H2DataUtil implements DataUtil{
             while (rs.next()) {
                 Item item = new Item();
                 item.setName(rs.getString("ITEM"));
-                item.setPrice(rs.getInt("PRICE"));
+                item.setPrice(rs.getDouble("PRICE"));
                 item.setQuantity(rs.getInt("QUANTITY"));
+                item.setItemTotal(rs.getDouble("ITEMTOTAL"));
                 result.add(item);
             }
 
@@ -99,7 +100,7 @@ public class H2DataUtil implements DataUtil{
             try {
                 conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
                 stmt = conn.createStatement();
-                stmt.execute("CREATE TABLE IF NOT EXISTS DAY" + date + "(ITEM VARCHAR(255) NOT NULL PRIMARY KEY, QUANTITY INT, PRICE INT);");
+                stmt.execute("CREATE TABLE IF NOT EXISTS DAY" + date + "(ITEM VARCHAR(255) NOT NULL PRIMARY KEY, QUANTITY INT, PRICE DOUBLE);");
 
                 Iterator<String> iterator = itemTypes.iterator();
                 while(iterator.hasNext()) {
@@ -118,7 +119,7 @@ public class H2DataUtil implements DataUtil{
         }
     }
 
-    public void updateDay(String month, String date, String column, int newValue, String item) throws Exception{
+    public void updateDay(String month, String date, String column, String newValue, String item) throws Exception{
         try {
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException e) {
@@ -130,6 +131,7 @@ public class H2DataUtil implements DataUtil{
         try {
             conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
             stmt = conn.createStatement();
+            System.out.println("new value: " + newValue);
             stmt.execute("UPDATE DAY" + date + " SET " + column + " = " + newValue + " WHERE ITEM='" + item + "'");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -225,6 +227,40 @@ public class H2DataUtil implements DataUtil{
                 e.printStackTrace();
             }
         }
+    }
+
+    public double getTotalValue(String month, String day) {
+        try {
+            Class.forName(JDBC_DRIVER);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        System.out.println("Connecting to database...");
+        Connection conn = null;
+        Statement stmt = null;
+        double result = 0;
+        String sql = "SELECT SUM(QUANTITY * PRICE) AS TOTAL FROM DAY" + day;
+        try {
+            conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while(rs.next()) {
+                result = rs.getDouble("TOTAL");
+                break;
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                cleanUp(conn, stmt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     private List<String> getItemTypes() {
