@@ -16,7 +16,7 @@ public class Utils {
 
     public static List<String> readMonths() throws FileNotFoundException {
         String pwd = readCurrentDirectory();
-        File folder = new File(pwd + "\\data");
+        File folder = new File(pwd + "/data");
         List<String> result = new ArrayList<String>();
 
         if(!folder.exists()) {
