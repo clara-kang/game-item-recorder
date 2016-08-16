@@ -34,7 +34,7 @@ public class TodayPanel extends JPanel{
         this.month = Utils.getTodayMonth();
         this.date = Utils.getTodayDate();
         total = new JTextField();
-
+        total.setPreferredSize(new Dimension(200, 24));
         setLayout(new FlowLayout());
 
         JButton returnButton = new JButton("Return");
