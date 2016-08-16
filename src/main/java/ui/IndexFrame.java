@@ -26,6 +26,8 @@ public class IndexFrame extends JTabbedPane {
         IndexPanel indexPanel = injector.getInstance(IndexPanel.class);
         awtGraphicsDemo.addTab("Tab 1", null, indexPanel,
                 "Does nothing");
+        awtGraphicsDemo.addTab("Tab 2", null, new TimerPanel(),
+                "Does nothing");
         awtGraphicsDemo.add(tabbedPane);
         frame.setVisible(true);
         frame.add(awtGraphicsDemo);
