@@ -5,7 +5,10 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class TimerPanel extends JPanel{
     private JButton newTimer;
@@ -37,8 +40,22 @@ public class TimerPanel extends JPanel{
             startCountDown.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String time = initCountDown.getText();
-                    SimpleDateFormat parserSDF = new SimpleDateFormat("mm:ss);
-                    System.out.println("time: "+ time);
+                    final SimpleDateFormat parserSDF = new SimpleDateFormat("mm:ss");
+                    try {
+                        Date date = parserSDF.parse(time);
+                        final Calendar cl = Calendar.getInstance();
+                        cl.setTime(date);
+                        Timer timer = new Timer(1000, new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                cl.add(Calendar.SECOND, -1);
+                                initCountDown.setText(parserSDF.format(cl.getTime()));
+                            }
+                        });
+                        timer.setRepeats(true);
+                        timer.start();
+                    } catch (ParseException e1) {
+
+                    }
                 }
             });
 
