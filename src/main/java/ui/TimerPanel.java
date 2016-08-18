@@ -26,10 +26,10 @@ public class TimerPanel extends JPanel{
         this.phaseNames = phaseNames;
         this.phaseDurations = new Date[phaseNames.length];
         try {
-            phaseDurations[0] = parserSDF.parse("10:50");
-            phaseDurations[1] = parserSDF.parse("01:25");
+            phaseDurations[0] = parserSDF.parse("11:00");
+            phaseDurations[1] = parserSDF.parse("01:35");
             phaseDurations[2] = parserSDF.parse("34:00");
-            phaseDurations[3] = parserSDF.parse("16:00");
+            phaseDurations[3] = parserSDF.parse("17:00");
         } catch (ParseException e) {
             e.printStackTrace();
         }
