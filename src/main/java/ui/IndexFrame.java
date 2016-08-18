@@ -34,7 +34,7 @@ public class IndexFrame extends JTabbedPane {
     }
 
     private void prepareGUI(){
-        frame.setSize(500,600);
+        frame.setSize(600,600);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
                 System.exit(0);
