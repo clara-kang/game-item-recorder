@@ -100,11 +100,11 @@ public class H2DataUtil implements DataUtil{
             try {
                 conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
                 stmt = conn.createStatement();
-                stmt.execute("CREATE TABLE IF NOT EXISTS DAY" + date + "(ITEM VARCHAR(255) NOT NULL PRIMARY KEY, QUANTITY INT, PRICE DOUBLE);");
+                stmt.execute("CREATE TABLE IF NOT EXISTS " + date + "(ITEM VARCHAR(255) NOT NULL PRIMARY KEY, QUANTITY INT, PRICE DOUBLE);");
 
                 Iterator<String> iterator = itemTypes.iterator();
                 while(iterator.hasNext()) {
-                    stmt.execute("INSERT INTO DAY" + date + " VALUES ('" + iterator.next() + "', 0, 0);");
+                    stmt.execute("INSERT INTO " + date + " VALUES ('" + iterator.next() + "', 0, 0);");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -132,7 +132,7 @@ public class H2DataUtil implements DataUtil{
             conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
             stmt = conn.createStatement();
             System.out.println("new value: " + newValue);
-            stmt.execute("UPDATE DAY" + date + " SET " + column + " = " + newValue + " WHERE ITEM='" + item + "'");
+            stmt.execute("UPDATE " + date + " SET " + column + " = " + newValue + " WHERE ITEM='" + item + "'");
         } catch (SQLException e) {
             e.printStackTrace();
             throw new Exception("table update unsuccessful");
@@ -159,7 +159,7 @@ public class H2DataUtil implements DataUtil{
         try {
             conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
             stmt = conn.createStatement();
-            stmt.execute("INSERT INTO DAY" + date + " VALUES ('" + itemName + "',0,0)");
+            stmt.execute("INSERT INTO " + date + " VALUES ('" + itemName + "',0,0)");
         } catch (SQLException e) {
             e.printStackTrace();
             throw new Exception("insert into database not successful");
@@ -201,7 +201,7 @@ public class H2DataUtil implements DataUtil{
         try {
             conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
             stmt = conn.createStatement();
-            stmt.execute("DELETE FROM DAY" + date + " WHERE ITEM = '" + itemName + "'");
+            stmt.execute("DELETE FROM " + date + " WHERE ITEM = '" + itemName + "'");
         } catch (SQLException e) {
             e.printStackTrace();
             throw new Exception("delete from database not successful");
@@ -240,7 +240,7 @@ public class H2DataUtil implements DataUtil{
         Connection conn = null;
         Statement stmt = null;
         double result = 0;
-        String sql = "SELECT SUM(QUANTITY * PRICE) AS TOTAL FROM DAY" + day;
+        String sql = "SELECT SUM(QUANTITY * PRICE) AS TOTAL FROM " + day;
         try {
             conn = DriverManager.getConnection(DB_URL_PREFIX + month, USER, PASS);
             stmt = conn.createStatement();

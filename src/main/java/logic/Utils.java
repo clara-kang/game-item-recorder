@@ -16,7 +16,7 @@ public class Utils {
 
     public static List<String> readMonths() throws FileNotFoundException {
         String pwd = readCurrentDirectory();
-        File folder = new File(pwd + "\\data");
+        File folder = new File(pwd + "/data");
         List<String> result = new ArrayList<String>();
 
         if(!folder.exists()) {
@@ -62,7 +62,7 @@ public class Utils {
         DateFormat dateFormat = new SimpleDateFormat("dd");
         Date date = new Date();
         System.out.println(dateFormat.format(date));
-        return dateFormat.format(date);
+        return "DAY" + dateFormat.format(date);
     }
 
     public static String getTodayMonth() {

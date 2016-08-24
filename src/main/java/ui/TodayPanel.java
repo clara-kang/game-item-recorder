@@ -43,7 +43,7 @@ public class TodayPanel extends JPanel{
                 SwingUtilities.invokeLater(returnToMonthPanel);
             }
         });
-        tableCreated = dataUtil.readDates(month).contains("DAY" + date);
+        tableCreated = dataUtil.readDates(month).contains(date);
         if (!tableCreated) {
             try {
                 dataUtil.createDay(month, date);
@@ -54,7 +54,7 @@ public class TodayPanel extends JPanel{
         }
 
         String[] columnNames = {"ITEM", "PRICE", "QUANTITY", "ITEMTOTAL"};
-        Set<Item> queryResult = dataUtil.readDay(month, "DAY" + date);
+        Set<Item> queryResult = dataUtil.readDay(month, date);
         Object[][] rowData = Utils.itemSetToObjectArray(queryResult);
         //todo add increase decrease button
         table = new JTable();

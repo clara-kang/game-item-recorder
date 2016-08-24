@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.Set;
 
 public class DayPanel extends JPanel{
@@ -19,8 +20,20 @@ public class DayPanel extends JPanel{
     public DayPanel(IndexFrame indexFrame, String date, String month, MonthPanel monthPanel, DataUtil dataUtil) {
         this.indexFrame = indexFrame;
         this.monthPanel = monthPanel;
+        JTextField total = new JTextField();
+        total.setPreferredSize(new Dimension(200, 24));
 
-        this.setLayout(new GridLayout(1,1));
+        Double val = dataUtil.getTotalValue(month, date);
+        Double valTruncated = new BigDecimal(val).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+        String text = Double.toString(valTruncated);
+        total.setText(text);
+
+        JLabel totalLabel = new JLabel("TOTAL VALUE");
+        JPanel totalPanel = new JPanel();
+        totalPanel.add(totalLabel);
+        totalPanel.add(total);
+
+        setLayout(new FlowLayout());
         JButton returnButton = new JButton("Return");
         returnButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -28,7 +41,7 @@ public class DayPanel extends JPanel{
             }
         });
 
-        String[] columnNames = {"Item Name", "Price", "Quantity"};
+        String[] columnNames = {"ITEM", "PRICE", "QUANTITY", "ITEMTOTAL"};
         Set<Item> queryResult = dataUtil.readDay(month, date);
         Object[][] rowData = Utils.itemSetToObjectArray(queryResult);
         JTable table = new JTable(rowData, columnNames);
@@ -36,6 +49,7 @@ public class DayPanel extends JPanel{
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane);
         add(returnButton);
+        add(totalPanel);
     }
 
     Runnable returnToMonthPanel = new Runnable() {
